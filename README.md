@@ -1,44 +1,4 @@
 # Trần Đức Bảo - Assignment - 01 - CN Web
 
-## Sakura Day — Anime Todo Planner
 
-Website To-Do App kết hợp lịch tháng, được xây dựng bằng HTML, CSS và JavaScript thuần theo phong cách anime màu hồng.
 
-## Tính năng
-
-- Thêm nhanh hoặc tạo nhiệm vụ chi tiết theo ngày và giờ.
-- Chỉnh sửa, xóa và đánh dấu hoàn thành nhiệm vụ.
-- Đánh dấu các nhiệm vụ quan trọng.
-- Hiển thị lịch tháng và lịch trình của từng ngày.
-- Tìm kiếm, lọc và sắp xếp nhiệm vụ.
-- Theo dõi tiến độ hoàn thành trong ngày.
-- Chuyển đổi giữa giao diện Sakura, trắng và đen.
-- Hiệu ứng chuyển động, confetti và thông báo tương tác.
-- Tự động lưu dữ liệu bằng `localStorage`.
-- Tương thích với màn hình desktop, tablet và điện thoại.
-
-## Công nghệ sử dụng
-
-- HTML5
-- CSS3
-- JavaScript
-- Local Storage API
-
-## Cách chạy
-
-Mở trực tiếp file `index.html` bằng trình duyệt hoặc chạy một static server trong thư mục dự án:
-
-```bash
-python -m http.server 4173
-```
-
-Sau đó truy cập:
-
-```text
-http://localhost:4173
-```
-
-## Tác giả
-
-**Trần Đức Bảo**  
-Assignment 01 — CN Web
