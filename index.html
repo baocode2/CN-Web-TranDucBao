@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="pink">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ff78a9">
+  <title>Sakura Day — Anime Todo Planner</title>
+  <meta name="description" content="Ứng dụng quản lý công việc và lịch tháng phong cách anime.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sakura-layer" aria-hidden="true"></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">✿</div>
+        <div><strong>Sakura Day</strong><span>Make today magical!</span></div>
+        <button class="icon-button mobile-only" id="closeSidebar" aria-label="Đóng menu">×</button>
+      </div>
+      <div class="profile-card">
+        <div class="avatar" aria-hidden="true">
+          <svg viewBox="0 0 64 64" role="img">
+            <defs>
+              <linearGradient id="avatar-bg" x1="8" y1="5" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ffd5e7" />
+                <stop offset="1" stop-color="#a997ee" />
+              </linearGradient>
+              <linearGradient id="avatar-hair" x1="20" y1="14" x2="47" y2="49" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#5d4b72" />
+                <stop offset="1" stop-color="#3f3453" />
+              </linearGradient>
+            </defs>
+            <circle cx="32" cy="32" r="30" fill="url(#avatar-bg)" />
+            <path d="M17 31c0-12 6-20 15-20 10 0 17 8 17 21v18H16l1-19Z" fill="url(#avatar-hair)" />
+            <path d="M21 29c0-9 5-14 12-14s12 5 12 14v7c0 9-5 15-12 15S21 45 21 36v-7Z" fill="#fff1eb" />
+            <path d="M20 29c1-11 6-16 14-16 7 0 12 5 13 14-5-1-10-4-13-8-3 5-8 8-14 10Z" fill="url(#avatar-hair)" />
+            <path d="M24 39c2 2 4 3 8 3 3 0 6-1 8-3" fill="none" stroke="#e9819f" stroke-width="1.5" stroke-linecap="round" />
+            <ellipse cx="27" cy="33" rx="1.6" ry="2.2" fill="#5b4b67" />
+            <ellipse cx="39" cy="33" rx="1.6" ry="2.2" fill="#5b4b67" />
+            <circle cx="24" cy="37" r="2.5" fill="#f5a5b8" opacity=".5" />
+            <circle cx="42" cy="37" r="2.5" fill="#f5a5b8" opacity=".5" />
+            <path d="M15 17c3-3 7-3 10 0-3 2-4 5-5 8-2-3-4-5-5-8Z" fill="#ff77a9" />
+            <circle cx="20" cy="18" r="2.5" fill="#fff0f6" />
+          </svg>
+        </div>
+        <div class="profile-copy">
+          <strong>Xin chào, Bảo!</strong>
+          <span><i></i> Sẵn sàng tỏa sáng</span>
+        </div>
+        <span class="profile-sparkle" aria-hidden="true">✦</span>
+      </div>
+      <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Tìm kiếm nhiệm vụ..." autocomplete="off"><kbd>⌘ K</kbd></label>
+      <nav class="nav-list" aria-label="Bộ lọc công việc">
+        <button class="nav-item active" data-filter="all"><span class="nav-icon lavender">⌂</span><span>Tất cả nhiệm vụ</span><b id="countAll">0</b></button>
+        <button class="nav-item" data-filter="today"><span class="nav-icon coral">☀</span><span>Hôm nay</span><b id="countToday">0</b></button>
+        <button class="nav-item" data-filter="upcoming"><span class="nav-icon blue">◷</span><span>Sắp tới</span><b id="countUpcoming">0</b></button>
+        <button class="nav-item" data-filter="important"><span class="nav-icon yellow">☆</span><span>Quan trọng</span><b id="countImportant">0</b></button>
+        <button class="nav-item" data-filter="completed"><span class="nav-icon mint">✓</span><span>Đã hoàn thành</span><b id="countCompleted">0</b></button>
+      </nav>
+      <div class="sidebar-label"><span>Danh mục</span><button id="manageCategories" aria-label="Quản lý danh mục">＋</button></div>
+      <div class="category-list" id="categoryList"></div>
+      <div class="quote-card">
+        <span class="quote-sparkle">✦</span><p>“Mỗi việc nhỏ hoàn thành là một bước gần hơn tới ước mơ.”</p><div class="mini-cat" aria-hidden="true"><span>♡</span> ᓚᘏᗢ</div>
+      </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <main class="main-content">
+      <header class="topbar">
+        <div class="heading-wrap">
+          <button class="icon-button menu-button" id="openSidebar" aria-label="Mở menu">☰</button>
+          <div><p class="eyebrow" id="dateGreeting"></p><h1 id="pageTitle">Tất cả nhiệm vụ <span>✿</span></h1></div>
+        </div>
+        <div class="top-actions">
+          <div class="theme-switcher" id="themeSwitcher">
+            <button class="icon-button" id="themeButton" aria-label="Đổi giao diện" title="Đổi giao diện">◐</button>
+            <div class="theme-menu" id="themeMenu" role="menu">
+              <button data-theme-value="pink"><i class="swatch pink"></i> Sakura</button><button data-theme-value="light"><i class="swatch light"></i> Trắng</button><button data-theme-value="dark"><i class="swatch dark"></i> Đen</button>
+            </div>
+          </div>
+          <button class="icon-button notification-button" id="notificationButton" aria-label="Thông báo">♢<span></span></button>
+          <button class="primary-button" id="openAddModal"><span>＋</span> Nhiệm vụ mới</button>
+        </div>
+      </header>
+      <section class="dashboard-grid">
+        <section class="task-panel panel">
+          <div class="progress-card">
+            <div class="progress-copy"><div class="progress-icon">✦</div><div><strong id="progressMessage">Ngày mới tuyệt vời!</strong><p id="progressDetail">Hãy hoàn thành những mục tiêu của bạn nhé.</p></div></div>
+            <div class="progress-ring" id="progressRing"><span id="progressPercent">0%</span></div>
+          </div>
+          <form class="quick-add" id="quickAddForm">
+            <button type="submit" aria-label="Thêm nhanh">＋</button><input id="quickAddInput" type="text" maxlength="100" placeholder="Bạn muốn làm gì hôm nay?" required>
+            <button type="button" class="quick-date" id="quickDateButton" title="Chọn ngày">▣ <span id="quickDateLabel">Hôm nay</span></button><input id="quickDateInput" type="date" aria-label="Ngày của nhiệm vụ">
+          </form>
+          <div class="list-toolbar">
+            <div class="segmented-control" id="viewTabs"><button class="active" data-view="pending">Cần làm</button><button data-view="completed">Hoàn thành</button></div>
+            <button class="sort-button" id="sortButton" title="Sắp xếp theo ngày">⇅ <span>Ngày gần nhất</span></button>
+          </div>
+          <div class="task-list" id="taskList" aria-live="polite"></div>
+          <div class="empty-state" id="emptyState" hidden><div class="empty-illustration">☁<span>✧</span></div><h3>Trống trơn như bầu trời!</h3><p>Thêm một nhiệm vụ nhỏ để bắt đầu ngày thật xinh nhé.</p><button class="text-button" id="emptyAddButton">＋ Thêm nhiệm vụ</button></div>
+        </section>
+        <aside class="calendar-column">
+          <section class="calendar-card panel">
+            <div class="calendar-head"><div><span class="small-label">Lịch của bạn</span><h2 id="calendarTitle"></h2></div><div class="calendar-nav"><button id="prevMonth" aria-label="Tháng trước">‹</button><button id="todayMonth">Nay</button><button id="nextMonth" aria-label="Tháng sau">›</button></div></div>
+            <div class="weekday-row" aria-hidden="true"><span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span></div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </section>
+          <section class="day-card panel">
+            <div class="day-card-head"><div><span class="small-label">Lịch trình</span><h3 id="selectedDateTitle"></h3></div><button class="round-add" id="addForSelectedDate" aria-label="Thêm vào ngày đã chọn">＋</button></div>
+            <div class="mini-schedule" id="miniSchedule"></div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+  <dialog class="task-modal" id="taskModal">
+    <form id="taskForm" method="dialog">
+      <div class="modal-head"><div><span class="small-label">Lên kế hoạch mới</span><h2 id="modalTitle">Thêm nhiệm vụ ✨</h2></div><button type="button" class="modal-close" id="closeModal" aria-label="Đóng">×</button></div>
+      <input type="hidden" id="taskId">
+      <label class="form-field full"><span>Tên nhiệm vụ</span><input id="taskTitle" maxlength="100" placeholder="Ví dụ: Hoàn thành bài thiết kế..." required></label>
+      <div class="form-row"><label class="form-field"><span>Ngày thực hiện</span><input id="taskDate" type="date" required></label><label class="form-field"><span>Thời gian</span><input id="taskTime" type="time"></label></div>
+      <div class="form-row"><label class="form-field"><span>Danh mục</span><select id="taskCategory"><option value="Học tập">📚 Học tập</option><option value="Công việc">💻 Công việc</option><option value="Cá nhân">🌸 Cá nhân</option><option value="Sức khỏe">🍵 Sức khỏe</option></select></label><label class="form-field"><span>Ưu tiên</span><select id="taskPriority"><option value="normal">Bình thường</option><option value="high">Quan trọng</option></select></label></div>
+      <label class="form-field full"><span>Ghi chú</span><textarea id="taskNotes" rows="3" maxlength="300" placeholder="Thêm một chút chi tiết..."></textarea></label>
+      <div class="modal-actions"><button type="button" class="secondary-button" id="cancelModal">Hủy</button><button type="submit" class="primary-button"><span>✦</span> Lưu nhiệm vụ</button></div>
+    </form>
+  </dialog>
+  <dialog class="confirm-modal" id="confirmModal"><div class="confirm-icon">?</div><h3>Xóa nhiệm vụ này?</h3><p>Thao tác này không thể hoàn tác đâu nhé.</p><div class="modal-actions"><button class="secondary-button" id="cancelDelete">Giữ lại</button><button class="danger-button" id="confirmDelete">Xóa nhiệm vụ</button></div></dialog>
+  <div class="toast" id="toast" role="status"><span>✓</span><p></p></div><div class="confetti" id="confetti" aria-hidden="true"></div>
+  <script src="app.js"></script>
+</body>
+</html>
