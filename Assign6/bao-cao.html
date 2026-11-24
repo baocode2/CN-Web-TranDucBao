@@ -193,35 +193,35 @@
       <text class="t-title" x="110" y="257" text-anchor="middle">AddUser</text>
       <text class="t-sub" x="110" y="277" text-anchor="middle">form + nút Thêm</text>
 
-      <rect class="box-main" x="275" y="125" width="170" height="90" rx="10"/>
-      <text class="t-title" x="360" y="155" text-anchor="middle">App</text>
-      <text class="t-sub" x="360" y="177" text-anchor="middle">kw</text>
-      <text class="t-sub" x="360" y="196" text-anchor="middle">newUser</text>
+      <rect class="box-main" x="262" y="125" width="160" height="90" rx="10"/>
+      <text class="t-title" x="342" y="155" text-anchor="middle">App</text>
+      <text class="t-sub" x="342" y="177" text-anchor="middle">kw</text>
+      <text class="t-sub" x="342" y="196" text-anchor="middle">newUser</text>
 
-      <rect class="box" x="530" y="125" width="170" height="90" rx="10"/>
-      <text class="t-title" x="615" y="155" text-anchor="middle">ResultTable</text>
-      <text class="t-sub" x="615" y="177" text-anchor="middle">lọc theo keyword</text>
-      <text class="t-sub" x="615" y="196" text-anchor="middle">thêm user mới</text>
+      <rect class="box" x="548" y="125" width="160" height="90" rx="10"/>
+      <text class="t-title" x="628" y="155" text-anchor="middle">ResultTable</text>
+      <text class="t-sub" x="628" y="177" text-anchor="middle">lọc theo keyword</text>
+      <text class="t-sub" x="628" y="196" text-anchor="middle">thêm user mới</text>
 
       <!-- up: SearchForm -> App -->
-      <path class="edge-up" d="M200 70 H240 V150 H272" marker-end="url(#ah-up)"/>
+      <path class="edge-up" d="M200 70 H240 V150 H259" marker-end="url(#ah-up)"/>
       <text class="t-lbl-up" x="212" y="30">onChangeValue(text)</text>
       <text class="t-lbl-up" x="212" y="46">→ setKeyword</text>
 
       <!-- up: AddUser -> App -->
-      <path class="edge-up" d="M200 260 H240 V190 H272" marker-end="url(#ah-up)"/>
+      <path class="edge-up" d="M200 260 H240 V190 H259" marker-end="url(#ah-up)"/>
       <text class="t-lbl-up" x="212" y="310">onAdd(user)</text>
       <text class="t-lbl-up" x="212" y="326">→ setNewUser</text>
 
       <!-- down: App -> ResultTable -->
-      <path class="edge-down" d="M445 150 H527" marker-end="url(#ah-down)"/>
-      <text class="t-lbl-down" x="486" y="142" text-anchor="middle">keyword={kw}</text>
-      <path class="edge-down" d="M445 190 H527" marker-end="url(#ah-down)"/>
-      <text class="t-lbl-down" x="486" y="208" text-anchor="middle">user={newUser}</text>
+      <path class="edge-down" d="M422 150 H545" marker-end="url(#ah-down)"/>
+      <text class="t-lbl-down" x="484" y="142" text-anchor="middle">keyword={kw}</text>
+      <path class="edge-down" d="M422 190 H545" marker-end="url(#ah-down)"/>
+      <text class="t-lbl-down" x="484" y="210" text-anchor="middle">user={newUser}</text>
 
       <!-- up: ResultTable -> App (onAdded) -->
-      <path class="edge-up" d="M615 215 V265 H400 V218" marker-end="url(#ah-up)"/>
-      <text class="t-lbl-up" x="508" y="285" text-anchor="middle">onAdded() → setNewUser(null)</text>
+      <path class="edge-up" d="M628 215 V265 H380 V218" marker-end="url(#ah-up)"/>
+      <text class="t-lbl-up" x="504" y="285" text-anchor="middle">onAdded() → setNewUser(null)</text>
 
       <!-- legend -->
       <path class="edge-down" d="M470 30 H500"/>
