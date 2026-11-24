@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo cáo React CRUD</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2430;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-soft: #e8efff;
+      --up: #d97706;
+      --up-soft: #fff4e0;
+      --danger: #dc2626;
+      --ok: #15803d;
+      --border: #e5e7eb;
+      --code-bg: #f3f4f6;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #14161c;
+        --card: #1d2029;
+        --text: #e8eaf0;
+        --muted: #9aa1ad;
+        --accent: #60a5fa;
+        --accent-soft: #1e2a44;
+        --up: #fbbf24;
+        --up-soft: #3a2e14;
+        --danger: #f87171;
+        --ok: #4ade80;
+        --border: #2c303b;
+        --code-bg: #262a35;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    main { max-width: 860px; margin: 0 auto; padding: 40px 16px 64px; }
+    .top-links { display: flex; flex-wrap: wrap; gap: 16px; font-size: .9rem; margin-bottom: 16px; }
+    a { color: var(--accent); }
+    h1 { font-size: 1.9rem; margin: 0 0 6px; line-height: 1.25; }
+    .sub { color: var(--muted); margin: 0 0 28px; }
+    h2 { font-size: 1.3rem; margin: 40px 0 12px; padding-top: 8px; border-top: 1px solid var(--border); }
+    h3 { font-size: 1.05rem; margin: 24px 0 8px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin: 12px 0;
+    }
+    .info-grid { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; }
+    .info-grid dt { color: var(--muted); }
+    .info-grid dd { margin: 0; }
+    figure { margin: 16px 0; }
+    figure svg { width: 100%; height: auto; display: block; }
+    figcaption { color: var(--muted); font-size: .88rem; text-align: center; margin-top: 8px; }
+    .table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+    th, td { padding: 9px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    th { font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+    tbody tr:last-child td { border-bottom: none; }
+    code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+    pre {
+      background: var(--code-bg);
+      border-radius: 8px;
+      padding: 12px 14px;
+      overflow-x: auto;
+      font-size: .85rem;
+      line-height: 1.5;
+      margin: 8px 0;
+    }
+    pre code { background: none; padding: 0; }
+    .tag { display: inline-block; font-size: .75rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; margin-right: 6px; }
+    .tag.err { color: var(--danger); border: 1px solid var(--danger); }
+    .tag.warn { color: var(--up); border: 1px solid var(--up); }
+    .bug h3 { margin-top: 4px; }
+    .label { font-weight: 600; }
+    .bad { border-left: 3px solid var(--danger); }
+    .good { border-left: 3px solid var(--ok); }
+    ul.check { list-style: none; padding: 0; }
+    ul.check li::before { content: "✓ "; color: var(--ok); font-weight: 700; }
+
+    /* SVG */
+    .box { fill: var(--card); stroke: var(--border); stroke-width: 1.5; }
+    .box-main { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+    .box-dash { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .t-title { fill: var(--text); font-size: 15px; font-weight: 700; font-family: system-ui, sans-serif; }
+    .t-sub { fill: var(--muted); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+    .t-lbl-down { fill: var(--accent); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+    .t-lbl-up { fill: var(--up); font-size: 12px; font-family: ui-monospace, Consolas, monospace; }
+    .edge { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+    .edge-down { fill: none; stroke: var(--accent); stroke-width: 2; }
+    .edge-up { fill: none; stroke: var(--up); stroke-width: 2; stroke-dasharray: 6 4; }
+    .head-down { fill: var(--accent); }
+    .head-up { fill: var(--up); }
+  </style>
+</head>
+<body>
+<main>
+  <nav class="top-links">
+    <a href="../">← Trang chủ</a>
+    <a href="index.html">Mở ứng dụng demo</a>
+    <a href="Ex.%20React-CRUD%20-%2020261.pdf">Đề bài (PDF)</a>
+  </nav>
+
+  <h1>Báo cáo bài tập: React cơ bản — CRUD quản lý người dùng</h1>
+  <p class="sub">Môn Công nghệ Web · Trần Đức Bảo</p>
+
+  <div class="card">
+    <dl class="info-grid">
+      <dt>Demo</dt><dd><a href="index.html">davidbao.io.vn/Assign6/</a></dd>
+      <dt>Công nghệ</dt><dd>React 18 (UMD qua CDN), ReactDOM, Babel Standalone — không cần build</dd>
+      <dt>Dữ liệu</dt><dd><code>https://jsonplaceholder.typicode.com/users</code> (10 người dùng mẫu)</dd>
+      <dt>Chức năng</dt><dd>Tìm kiếm, Thêm, Sửa, Xóa người dùng; form thêm/sửa dạng modal</dd>
+    </dl>
+  </div>
+
+  <!-- ============ 1. COMPONENT TREE ============ -->
+  <h2>1. Sơ đồ cây Component (Component Tree)</h2>
+  <p>Ứng dụng gồm 4 functional component. <code>App</code> là gốc, giữ state dùng chung và render 3 component con. Modal Thêm/Sửa không phải component riêng mà được render có điều kiện bên trong <code>AddUser</code> và <code>ResultTable</code>.</p>
+
+  <figure class="card">
+    <svg viewBox="0 0 720 330" role="img" aria-label="Sơ đồ cây component: App là gốc, có ba con SearchForm, AddUser, ResultTable">
+      <!-- edges -->
+      <path class="edge" d="M360 84 V117 H120 V150"/>
+      <path class="edge" d="M360 84 V150"/>
+      <path class="edge" d="M360 117 H600 V150"/>
+      <path class="edge" d="M360 214 V250" stroke-dasharray="4 4"/>
+      <path class="edge" d="M600 214 V250" stroke-dasharray="4 4"/>
+
+      <!-- App -->
+      <rect class="box-main" x="250" y="20" width="220" height="64" rx="10"/>
+      <text class="t-title" x="360" y="47" text-anchor="middle">App</text>
+      <text class="t-sub" x="360" y="68" text-anchor="middle">state: kw, newUser</text>
+
+      <!-- SearchForm -->
+      <rect class="box" x="20" y="150" width="200" height="64" rx="10"/>
+      <text class="t-title" x="120" y="177" text-anchor="middle">SearchForm</text>
+      <text class="t-sub" x="120" y="198" text-anchor="middle">(không có state)</text>
+
+      <!-- AddUser -->
+      <rect class="box" x="260" y="150" width="200" height="64" rx="10"/>
+      <text class="t-title" x="360" y="177" text-anchor="middle">AddUser</text>
+      <text class="t-sub" x="360" y="198" text-anchor="middle">state: adding, user</text>
+
+      <!-- ResultTable -->
+      <rect class="box" x="500" y="150" width="200" height="64" rx="10"/>
+      <text class="t-title" x="600" y="177" text-anchor="middle">ResultTable</text>
+      <text class="t-sub" x="600" y="198" text-anchor="middle">users, loading, editing</text>
+
+      <!-- JSX con -->
+      <rect class="box-dash" x="260" y="250" width="200" height="56" rx="10"/>
+      <text class="t-sub" x="360" y="273" text-anchor="middle">nút "Thêm"</text>
+      <text class="t-sub" x="360" y="292" text-anchor="middle">+ modal thêm (nếu adding)</text>
+
+      <rect class="box-dash" x="500" y="250" width="200" height="56" rx="10"/>
+      <text class="t-sub" x="600" y="273" text-anchor="middle">&lt;table&gt; các dòng user</text>
+      <text class="t-sub" x="600" y="292" text-anchor="middle">+ modal sửa (nếu editing)</text>
+    </svg>
+    <figcaption>Hình 1 — Cây component. Khung nét đứt là phần JSX được render bên trong component, không phải component riêng.</figcaption>
+  </figure>
+
+  <!-- ============ 2. DATA FLOW ============ -->
+  <h2>2. Sơ đồ luồng dữ liệu (State Lifting)</h2>
+  <p>React dùng <strong>luồng dữ liệu một chiều</strong>: dữ liệu đi <span style="color:var(--accent);font-weight:600">xuống</span> qua props; component con muốn báo thay đổi thì gọi hàm callback mà cha truyền xuống để dữ liệu đi <span style="color:var(--up);font-weight:600">lên</span>.</p>
+
+  <figure class="card">
+    <svg viewBox="0 0 720 340" role="img" aria-label="Luồng dữ liệu: SearchForm và AddUser gọi callback lên App; App truyền keyword và user xuống ResultTable; ResultTable gọi onAdded lên App">
+      <defs>
+        <marker id="ah-down" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="head-down" d="M0 0 L10 5 L0 10 z"/>
+        </marker>
+        <marker id="ah-up" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="head-up" d="M0 0 L10 5 L0 10 z"/>
+        </marker>
+      </defs>
+
+      <!-- boxes -->
+      <rect class="box" x="20" y="40" width="180" height="60" rx="10"/>
+      <text class="t-title" x="110" y="67" text-anchor="middle">SearchForm</text>
+      <text class="t-sub" x="110" y="87" text-anchor="middle">ô input</text>
+
+      <rect class="box" x="20" y="230" width="180" height="60" rx="10"/>
+      <text class="t-title" x="110" y="257" text-anchor="middle">AddUser</text>
+      <text class="t-sub" x="110" y="277" text-anchor="middle">form + nút Thêm</text>
+
+      <rect class="box-main" x="275" y="125" width="170" height="90" rx="10"/>
+      <text class="t-title" x="360" y="155" text-anchor="middle">App</text>
+      <text class="t-sub" x="360" y="177" text-anchor="middle">kw</text>
+      <text class="t-sub" x="360" y="196" text-anchor="middle">newUser</text>
+
+      <rect class="box" x="530" y="125" width="170" height="90" rx="10"/>
+      <text class="t-title" x="615" y="155" text-anchor="middle">ResultTable</text>
+      <text class="t-sub" x="615" y="177" text-anchor="middle">lọc theo keyword</text>
+      <text class="t-sub" x="615" y="196" text-anchor="middle">thêm user mới</text>
+
+      <!-- up: SearchForm -> App -->
+      <path class="edge-up" d="M200 70 H240 V150 H272" marker-end="url(#ah-up)"/>
+      <text class="t-lbl-up" x="212" y="30">onChangeValue(text)</text>
+      <text class="t-lbl-up" x="212" y="46">→ setKeyword</text>
+
+      <!-- up: AddUser -> App -->
+      <path class="edge-up" d="M200 260 H240 V190 H272" marker-end="url(#ah-up)"/>
+      <text class="t-lbl-up" x="212" y="310">onAdd(user)</text>
+      <text class="t-lbl-up" x="212" y="326">→ setNewUser</text>
+
+      <!-- down: App -> ResultTable -->
+      <path class="edge-down" d="M445 150 H527" marker-end="url(#ah-down)"/>
+      <text class="t-lbl-down" x="486" y="142" text-anchor="middle">keyword={kw}</text>
+      <path class="edge-down" d="M445 190 H527" marker-end="url(#ah-down)"/>
+      <text class="t-lbl-down" x="486" y="208" text-anchor="middle">user={newUser}</text>
+
+      <!-- up: ResultTable -> App (onAdded) -->
+      <path class="edge-up" d="M615 215 V265 H400 V218" marker-end="url(#ah-up)"/>
+      <text class="t-lbl-up" x="508" y="285" text-anchor="middle">onAdded() → setNewUser(null)</text>
+
+      <!-- legend -->
+      <path class="edge-down" d="M470 30 H500"/>
+      <text class="t-sub" x="508" y="34">props (cha → con)</text>
+      <path class="edge-up" d="M470 54 H500"/>
+      <text class="t-sub" x="508" y="58">callback (con → cha)</text>
+    </svg>
+    <figcaption>Hình 2 — Luồng dữ liệu: SearchForm → App → ResultTable và AddUser → App → ResultTable.</figcaption>
+  </figure>
+
+  <h3>Diễn giải từng luồng</h3>
+  <ol>
+    <li><strong>Tìm kiếm:</strong> người dùng gõ vào <code>SearchForm</code> → sự kiện <code>onChange</code> gọi <code>onChangeValue(e.target.value)</code>, thực chất là <code>setKeyword</code> của App → <code>kw</code> đổi, App render lại → <code>ResultTable</code> nhận <code>keyword</code> mới và chạy lại <code>users.filter(...)</code>.</li>
+    <li><strong>Thêm:</strong> người dùng điền form và bấm Thêm trong <code>AddUser</code> → gọi <code>onAdd(user)</code> (= <code>setNewUser</code>) → App truyền <code>user={newUser}</code> xuống → <code>useEffect([user])</code> trong <code>ResultTable</code> thêm user vào mảng <code>users</code> rồi gọi <code>onAdded()</code> để App đặt <code>newUser</code> về <code>null</code>, sẵn sàng cho lần thêm sau.</li>
+    <li><strong>Sửa / Xóa:</strong> chỉ liên quan đến dữ liệu trong bảng nên xử lý ngay trong <code>ResultTable</code> (state <code>editing</code>, <code>users</code>), không cần đưa lên App.</li>
+  </ol>
+
+  <h3>Vì sao <code>kw</code> và <code>newUser</code> đặt ở App, không đặt ở SearchForm hay AddUser?</h3>
+  <div class="card">
+    <p><strong>Vì dữ liệu này được tạo ở một component nhưng lại được dùng ở một component khác cùng cấp.</strong> <code>kw</code> được nhập ở <code>SearchForm</code> nhưng được dùng để lọc ở <code>ResultTable</code>; <code>newUser</code> được tạo ở <code>AddUser</code> nhưng được thêm vào danh sách ở <code>ResultTable</code>.</p>
+    <p>Trong React, props chỉ chảy từ cha xuống con. SearchForm, AddUser và ResultTable là <em>anh em</em> (sibling) nên không thể truyền dữ liệu trực tiếp cho nhau. Nếu đặt <code>kw</code> bên trong SearchForm thì ResultTable không có cách nào đọc được nó.</p>
+    <p>Giải pháp là <strong>nâng state lên (State Lifting)</strong> tới <em>component cha chung gần nhất</em> — ở đây là <code>App</code>. App giữ state, truyền <em>hàm cập nhật</em> (<code>setKeyword</code>, <code>setNewUser</code>) xuống cho con nhập liệu và truyền <em>giá trị</em> (<code>kw</code>, <code>newUser</code>) xuống cho con hiển thị.</p>
+    <p>Lợi ích:</p>
+    <ul>
+      <li><strong>Một nguồn dữ liệu duy nhất (single source of truth):</strong> chỉ App lưu từ khóa, không có hai bản sao lệch nhau.</li>
+      <li><strong>Component con đơn giản, dễ tái sử dụng:</strong> SearchForm không cần biết bảng nào dùng từ khóa của nó, chỉ cần gọi <code>onChangeValue</code>.</li>
+      <li><strong>Luồng dữ liệu dễ theo dõi:</strong> muốn biết <code>kw</code> đổi ở đâu thì chỉ cần nhìn App.</li>
+    </ul>
+    <p>Ngược lại, những state chỉ một component dùng thì giữ cục bộ: <code>adding</code> và dữ liệu form <code>user</code> chỉ nằm trong AddUser; <code>users</code>, <code>loading</code>, <code>editing</code> chỉ nằm trong ResultTable.</p>
+  </div>
+
+  <!-- ============ 3. PROPS ============ -->
+  <h2>3. Bảng mô tả Props truyền từ App xuống component con</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Component nhận</th><th>Tên prop</th><th>Giá trị App truyền</th><th>Kiểu</th><th>Chiều</th><th>Mục đích</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SearchForm</strong></td>
+          <td><code>onChangeValue</code></td>
+          <td><code>setKeyword</code></td>
+          <td>function(string)</td>
+          <td>con → cha</td>
+          <td>Gửi từ khóa người dùng gõ lên App để cập nhật <code>kw</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>AddUser</strong></td>
+          <td><code>onAdd</code></td>
+          <td><code>setNewUser</code></td>
+          <td>function(object)</td>
+          <td>con → cha</td>
+          <td>Gửi đối tượng user vừa nhập lên App để lưu vào <code>newUser</code>.</td>
+        </tr>
+        <tr>
+          <td rowspan="3"><strong>ResultTable</strong></td>
+          <td><code>keyword</code></td>
+          <td><code>kw</code></td>
+          <td>string</td>
+          <td>cha → con</td>
+          <td>Từ khóa để lọc danh sách theo name / username.</td>
+        </tr>
+        <tr>
+          <td><code>user</code></td>
+          <td><code>newUser</code></td>
+          <td>object | null</td>
+          <td>cha → con</td>
+          <td>User mới cần thêm vào bảng; <code>null</code> khi không có gì để thêm.</td>
+        </tr>
+        <tr>
+          <td><code>onAdded</code></td>
+          <td><code>() =&gt; setNewUser(null)</code></td>
+          <td>function()</td>
+          <td>con → cha</td>
+          <td>Báo cho App đã thêm xong để reset <code>newUser</code>, tránh thêm trùng.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Cấu trúc đối tượng <code>user</code> được truyền qua <code>onAdd</code> / <code>user</code>:</p>
+<pre><code>{
+  name, username, email, phone, website,
+  address: { street, suite, city }   // thuộc tính lồng
+}</code></pre>
+
+  <!-- ============ 4. BUGS ============ -->
+  <h2>4. Lỗi gặp phải trong quá trình code và cách sửa</h2>
+
+  <div class="card bug">
+    <span class="tag err">Error</span>
+    <h3>Lỗi 1 — <code>ReactDOM is not defined</code></h3>
+    <p class="label">Thông báo / hiện tượng</p>
+    <p>Trang trắng tinh, Console báo:</p>
+<pre><code>GET https://unpkg.com/react-%20dom@18/umd/react-dom.development.js  404 (Not Found)
+Uncaught ReferenceError: ReactDOM is not defined</code></pre>
+    <p class="label">Nguyên nhân</p>
+    <p>Khi copy đường dẫn CDN từ file PDF, dòng <code>react-dom.development.js</code> bị ngắt xuống dòng thành <code>react-</code> + <code>dom...</code>, nên khi dán vào xuất hiện dấu cách trong URL. Trình duyệt không tải được thư viện ReactDOM → biến toàn cục <code>ReactDOM</code> không tồn tại → dòng <code>ReactDOM.createRoot(...)</code> báo lỗi.</p>
+    <p class="label">Cách sửa</p>
+    <p>Gõ lại URL liền mạch và ghim phiên bản cụ thể để không bị thay đổi bất ngờ. Kiểm tra lại ở tab Network: cả 3 file đều trả về 200.</p>
+<pre class="good"><code>&lt;script src="https://unpkg.com/react@18.3.1/umd/react.development.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"&gt;&lt;/script&gt;
+&lt;script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+
+  <div class="card bug">
+    <span class="tag err">Lỗi logic</span>
+    <h3>Lỗi 2 — Bấm “Thêm” nhưng form không hiện ra (nút Hủy viết sai)</h3>
+    <p class="label">Hiện tượng</p>
+    <p>Bấm nút “Thêm” không thấy modal nào mở ra, Console không có lỗi đỏ. Đặt <code>console.log(adding)</code> trong AddUser thì thấy giá trị in ra <code>true</code> rồi ngay lập tức <code>false</code>.</p>
+    <p class="label">Nguyên nhân</p>
+    <p>Đoạn mã mẫu viết nút Hủy như sau:</p>
+<pre class="bad"><code>&lt;button onClick={setAdding(false)}&gt;Hủy&lt;/button&gt;</code></pre>
+    <p><code>setAdding(false)</code> có dấu ngoặc nên nó được <strong>gọi ngay khi render</strong>, chứ không phải khi bấm nút. Khi <code>adding</code> vừa thành <code>true</code>, React render form → gặp nút Hủy → gọi <code>setAdding(false)</code> → React render lại với <code>adding = false</code> → form biến mất trước khi kịp hiện. (Nếu nút này nằm ngoài điều kiện <code>adding &amp;&amp;</code> thì sẽ thành vòng lặp và React báo <code>Too many re-renders. React limits the number of renders to prevent an infinite loop.</code>)</p>
+    <p class="label">Cách sửa</p>
+    <p>Truyền vào <code>onClick</code> một <em>hàm</em>, để React chỉ gọi khi người dùng bấm:</p>
+<pre class="good"><code>&lt;button onClick={() =&gt; setAdding(false)}&gt;Hủy&lt;/button&gt;</code></pre>
+  </div>
+
+  <div class="card bug">
+    <span class="tag warn">Warning</span>
+    <h3>Lỗi 3 — Trùng <code>key</code> sau khi Xóa rồi Thêm</h3>
+    <p class="label">Thông báo / hiện tượng</p>
+    <p>Xóa user có ID 3, sau đó thêm một user mới. Bảng hiện <strong>hai dòng cùng ID 10</strong> và Console báo:</p>
+<pre><code>Warning: Encountered two children with the same key, `10`. Keys should be unique
+so that components maintain their identity across updates.</code></pre>
+    <p>Sau đó bấm “Xóa” hoặc “Sửa” dòng có ID 10 thì tác động lên <em>cả hai</em> user, vì <code>filter</code>/<code>map</code> so sánh theo <code>id</code>.</p>
+    <p class="label">Nguyên nhân</p>
+    <p>Mã mẫu sinh id mới bằng độ dài mảng:</p>
+<pre class="bad"><code>setUsers((prev) =&gt; [...prev, { ...user, id: prev.length + 1 }]);</code></pre>
+    <p>Ban đầu có 10 user (id 1–10). Xóa id 3 còn 9 phần tử → user mới nhận <code>id = 9 + 1 = 10</code>, trùng với user id 10 đang có. <code>key</code> trong <code>map</code> bị trùng nên React cảnh báo, và id trùng làm sai logic Sửa/Xóa.</p>
+    <p class="label">Cách sửa</p>
+    <p>Lấy id lớn nhất hiện có cộng 1, nên id luôn mới dù đã xóa phần tử nào:</p>
+<pre class="good"><code>setUsers((prev) =&gt; {
+  const maxId = prev.reduce((max, u) =&gt; Math.max(max, u.id), 0);
+  return [...prev, { ...user, id: maxId + 1 }];
+});</code></pre>
+    <p>Kiểm tra lại: xóa ID 3 rồi thêm → user mới có ID 11, không còn cảnh báo.</p>
+  </div>
+
+  <div class="card bug">
+    <span class="tag warn">Lưu ý</span>
+    <h3>Lỗi 4 — Sửa trong form làm bảng đổi theo dù chưa bấm Lưu</h3>
+    <p class="label">Hiện tượng</p>
+    <p>Lúc đầu viết <code>setEditing(user)</code> và cập nhật địa chỉ bằng <code>editing.address.city = value</code>. Khi gõ vào ô “Thành phố” trong form Sửa, ô địa chỉ ở bảng cũng đổi theo, kể cả khi bấm Hủy.</p>
+    <p class="label">Nguyên nhân</p>
+    <p>Object trong JavaScript được gán theo <em>tham chiếu</em>: <code>editing.address</code> và <code>user.address</code> trong bảng là cùng một đối tượng, nên sửa trực tiếp là sửa luôn dữ liệu gốc (mutate state).</p>
+    <p class="label">Cách sửa</p>
+    <p>Sao chép sâu khi mở form và luôn tạo object mới khi cập nhật:</p>
+<pre class="good"><code>function editUser(u) {
+  setEditing({ ...u, address: { ...u.address } });
+}
+function handleEditChange(field, value) {
+  if (["street", "suite", "city"].includes(field))
+    setEditing(prev =&gt; ({ ...prev, address: { ...prev.address, [field]: value } }));
+  else
+    setEditing(prev =&gt; ({ ...prev, [field]: value }));
+}</code></pre>
+  </div>
+
+  <!-- ============ 5. TEST ============ -->
+  <h2>5. Kiểm thử CRUD</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Chức năng</th><th>Thao tác kiểm thử</th><th>Kết quả</th></tr></thead>
+      <tbody>
+        <tr><td>Read</td><td>Mở trang</td><td>Hiện “Đang tải dữ liệu…”, sau đó bảng 10 người dùng từ API.</td></tr>
+        <tr><td>Tìm kiếm</td><td>Gõ <code>bret</code>, rồi <code>clem</code></td><td>Lọc ra Leanne Graham (username Bret); sau đó Clementine Bauch và Clementina DuBuque. Không phân biệt hoa thường.</td></tr>
+        <tr><td>Create</td><td>Thêm user “Trần Đức Bảo / baotd”</td><td>Dòng mới xuất hiện cuối bảng với ID 11, địa chỉ ghép đúng street, suite, city.</td></tr>
+        <tr><td>Create (validate)</td><td>Bấm Thêm khi để trống Name</td><td>Hiện thông báo “Vui lòng nhập Name và Username!”, không thêm.</td></tr>
+        <tr><td>Update</td><td>Sửa thành phố của user 1, bấm Lưu</td><td>Bảng cập nhật; bấm Hủy thì dữ liệu giữ nguyên.</td></tr>
+        <tr><td>Delete</td><td>Bấm Xóa user 3</td><td>Dòng bị xóa ngay, không cần xác nhận.</td></tr>
+        <tr><td>Tìm + thêm</td><td>Đang lọc <code>bao</code> thì thêm user mới tên có “Bao”</td><td>User mới hiện luôn trong kết quả lọc.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ 6. SUMMARY ============ -->
+  <h2>6. Tổng kết</h2>
+  <ul class="check">
+    <li><strong>useState</strong> quản lý state; <strong>useEffect</strong> với <code>[]</code> để gọi API một lần, với <code>[user]</code> để lắng nghe user mới.</li>
+    <li><strong>State Lifting:</strong> state dùng chung giữa các component anh em được đặt ở cha chung (App).</li>
+    <li><strong>Controlled Components:</strong> mọi ô input lấy <code>value</code> từ state và cập nhật qua <code>onChange</code>.</li>
+    <li><strong>Bất biến (immutability):</strong> thêm bằng spread, sửa bằng <code>map</code>, xóa bằng <code>filter</code> — luôn tạo mảng/đối tượng mới.</li>
+    <li>Luồng dữ liệu: <code>SearchForm → App → ResultTable</code> và <code>AddUser → App → ResultTable</code>.</li>
+  </ul>
+</main>
+</body>
+</html>
